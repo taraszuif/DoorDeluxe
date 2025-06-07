@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="container py-5">
+    <h1 class="mb-4 justify-content-center" th:text="${door.getName()}"></h1>
+    <div class="row g-5 justify-content-center align-items-start">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <img alt="Product Image" class="card-img-top img-fluid rounded d-block mx-auto"
+                     data-bs-target="#imageModal"
+                     data-bs-toggle="modal"
+                     style="object-fit: contain; height: 700px; width: 100%; background-color: #f8f9fa; cursor: zoom-in"
+                     th:src="${door.getImageUrl()}">
+            </div>
+        </div>
+
+        <div aria-hidden="true" aria-labelledby="imageModalLabel" class="modal fade" id="imageModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-transparent border-0">
+                    <img alt="Zoomed Product Image" class="img-fluid rounded shadow-lg" th:src="${door.getImageUrl()}">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item bg-transparent border-0 fs-5 fw-semibold"
+                            th:text="${door.getName()}"></li>
+                        <li class="list-group-item bg-transparent border-0"
+                            th:text=" ${door.getDescription()}"></li>
+                        <div th:if="${door.getDiscount() == null}">
+                            <p class="card-text h5 mb-2" th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center flex-column"
+                             th:if="${door.getDiscount() != null}">
+                            <p class="card-text mb-1">
+                                <span class="h5 text-danger font-weight-bold"
+                                      th:text="${door.getPriceWithDiscount()}  + ' ' + #{currency.uah}"></span>
+                            </p>
+                            <p class="card-text mb-2">
+                                <small class="text-muted">
+                                    <del th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></del>
+                                </small>
+                            </p>
+                            <span class="badge bg-success text-white"
+                                  th:text="#{label.discount} + ': ' + ${door.getDiscount().getIntPercentage()} + '%'"></span>
+                        </div>
+                        <li class="list-group-item bg-transparent border-0"
+                            th:text="#{about.door.addtime} + ': ' + ${door.getAddTime().format(formatter)}"></li>
+                        <li class="list-group-item bg-transparent border-0"
+                            th:text="#{about.door.count} + ': ' + ${door.getCount()}"></li>
+                        <li class="list-group-item bg-transparent border-0"
+                            th:text="#{about.door.manufacturer} + ': ' + ${door.getManufacturer()}"></li>
+                    </ul>
+
+                    <div class="d-grid gap-3">
+                        <a class="btn btn-primary btn-lg"
+                           th:href="@{'/cart/add/' + ${door.getId()}}"
+                           th:text="#{door.add}"></a>
+
+                        <a class="btn btn-outline-secondary btn-lg"
+                           th:href="@{'/rating/new/' + ${door.getId()}}"
+                           th:text="#{rating.new}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container text-center" th:if="${!rating.isEmpty()}">
+    <h1 th:text="#{rating.page}"></h1>
+    <div class="row justify-content-around">
+        <div class="col-sm-4 text-center border rounded shadow-sm p-4 mb-3">
+            <h5 class="text-secondary" th:text="#{rating.average}"></h5>
+            <h2 class="fw-bold mb-2" th:text="${#numbers.formatDecimal(rating.get().average, 0, 2)}">
+                <small class="text-muted">/ 5</small>
+            </h2>
+            <div class="d-inline-block">
+            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                <i class="fas fa-star fs-4"
+                   th:classappend="${i <= rating.get().average} ? 'text-warning' : 'text-secondary'"></i>
+            </span>
+            </div>
+        </div>
+
+        <div class="col-sm-6 border rounded shadow-sm p-4 mb-3">
+            <h5 class="text-secondary mb-3" th:text="#{rating.breakdown}"></h5>
+            <div class="d-flex align-items-center mb-2" th:each="i : ${#numbers.sequence(5, 1, -1)}">
+                <div class="me-2" style="width: 35px;">
+                    <span th:text="${i}"></span> <i class="fas fa-star text-warning"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-success"
+                             role="progressbar"
+                             th:attr="aria-valuenow=${i}, aria-valuemin=0, aria-valuemax=5"
+                             th:style="'width:' + ((${rating.get().getRateTotalCount().get(i)} / (${rating.get().getRatingsCount()})) * 100) + '%'">
+                        </div>
+                    </div>
+                </div>
+                <div class="ms-2 text-muted small"
+                     th:text="${rating.get().getRateTotalCount().get(i)} "></div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-7">
+            <hr/>
+            <div class="review-block mb-4" th:each="usrRating : ${rating.get().getRatingList()}"
+                 th:if="${usrRating.getUser() != null}">
+                <div class="position-relative border rounded p-3 shadow-sm">
+                    <div class="position-absolute top-0 end-0 mt-2 me-2" sec:authorize="isAuthenticated()"
+                         th:if="${usrRating.getUser().getUserName().equals(#authentication.getPrincipal().getUsername())}">
+                        <form class="d-inline" method="POST" th:action="@{'/rating/delete/' + ${usrRating.getId()}}">
+                            <button class="btn btn-sm btn-outline-danger" title="Удалить" type="submit">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                        <a class="btn btn-sm btn-outline-primary ms-1"
+                           th:href="@{'/rating/edit/' + ${usrRating.getId()}}" title="Редактировать">
+                            <i class="fas fa-wrench"></i>
+                        </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3 text-center">
+                            <img class="img-fluid rounded-circle mb-2" style="width: 70px; height: 70px;"
+                                 th:src="${usrRating.getUser().getImageUrl()}"/>
+                            <div class="fw-bold" th:text="${usrRating.getUser().getUserName()}"></div>
+                            <div class="text-muted small" th:text="${usrRating.getAddTime().format(formatter)}"></div>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div class="mb-2">
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i class="fas fa-star"
+                                   th:classappend="${i <= usrRating.rate} ? 'text-warning' : 'text-secondary'"></i>
+                            </span>
+                            </div>
+                            <div class="fw-semibold fs-5" th:text="${usrRating.getTitle()}"></div>
+                            <div th:text="${usrRating.getComment()}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container text-center" th:if="${rating.isEmpty()}">
+    <h1 th:text="#{rating.no}"></h1>
+</div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

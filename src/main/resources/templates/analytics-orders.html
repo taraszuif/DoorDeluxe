@@ -1,0 +1,33 @@
+<div class="card p-4">
+    <h4 class="text-center mb-4" th:text="#{analytics.orders.title}"></h4>
+    <canvas height="40" id="ordersChart" width="100%"></canvas>
+</div>
+
+<script th:inline="javascript">
+    const orderLabels = /*[[${orderLabels}]]*/ [];
+    const orderData = /*[[${orderValues}]]*/ [];
+    const orderLabel = /*[[#{analytics.orders.chartLabel}]]*/ '';
+
+    const ctx = document.getElementById('ordersChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: orderLabels,
+            datasets: [{
+                label: orderLabel,
+                data: orderData,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0
+                }
+            }
+        }
+    });
+</script>

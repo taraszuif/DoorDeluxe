@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+<style>
+    body {
+        background: #f5f5f5;
+    }
+
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+    }
+
+    .register-card {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin-top: 40px;
+    }
+
+    .register-card h1 {
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 600;
+        color: #333333;
+    }
+
+    .register-card .form-group {
+        margin-bottom: 20px;
+    }
+
+    .register-card input[type="text"],
+    .register-card input[type="password"],
+    .register-card input[type="email"],
+    .register-card input[type="number"] {
+        font-size: 16px;
+        padding: 12px 16px;
+        border: 1.5px solid #ccc;
+        border-radius: 6px;
+        background-color: #fafafa;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .register-card input:focus {
+        border-color: #999;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+        outline: none;
+    }
+
+    .register-card .btn {
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 6px;
+        background-color: #444;
+        border: none;
+        color: white;
+        transition: background-color 0.3s;
+    }
+
+    .register-card .btn:hover {
+        background-color: #222;
+    }
+
+    .register-card label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .register-card .alert-danger {
+        font-size: 14px;
+        margin-top: 5px;
+        padding: 8px 12px;
+    }
+
+    .register-card p {
+        font-size: 14px;
+        color: #777;
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3 register-card">
+            <form autocomplete="off" class="form-signin" method="POST" th:action="@{register}" th:object="${userForm}">
+                <fieldset>
+                    <h1 th:text="#{register.title}"></h1>
+                    <div class="form-group">
+                        <label th:text="#{user.username} + '*'"></label>
+                        <input autofocus="true" class="form-control input-lg" th:field="*{userName}" title="userName"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{userName}"
+                             th:if="${#fields.hasErrors('userName')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.email} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{email}" title="email" type="email"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{email}"
+                             th:if="${#fields.hasErrors('email')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.password} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{password}" title="password"
+                               type="password"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{password}"
+                             th:if="${#fields.hasErrors('password')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.firstname} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{firstName}" title="firstName"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{firstName}"
+                             th:if="${#fields.hasErrors('firstName')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.lastname} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{lastName}" title="lastName"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{lastName}"
+                             th:if="${#fields.hasErrors('lastName')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.city} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{city}" title="city"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{city}"
+                             th:if="${#fields.hasErrors('city')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{user.age} + '*'"></label>
+                        <input class="form-control input-lg" required th:field="*{age}" title="age"
+                               type="number"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{age}"
+                             th:if="${#fields.hasErrors('age')}"></div>
+                    </div>
+                    <p th:text="#{register.required}"></p>
+                    <input class="btn btn-outline-dark" th:value="#{register.button}" type="submit"/>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

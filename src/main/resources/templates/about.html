@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-css}">
+    <style>
+        .feature-box {
+            background-color: #f8f9fa;
+            border-radius: 1rem;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 6rem;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+            filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-desc {
+            font-size: 1.25rem; /*
+            color: #374151;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 th:text="#{about.title}"></h1>
+        <p class="lead" th:text="#{about.welcome}"></p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="feature-box h-100">
+                <i class="fas fa-door-open text-primary feature-icon"></i>
+                <div class="feature-title" th:text="#{about.whyUs.title}"></div>
+                <div class="feature-desc" th:text="#{about.whyUs.desc}"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="feature-box h-100">
+                <i class="fas fa-lock text-warning feature-icon"></i>
+                <div class="feature-title" th:text="#{about.security.title}"></div>
+                <div class="feature-desc" th:text="#{about.security.desc}"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="feature-box h-100">
+                <i class="fas fa-truck text-success feature-icon"></i>
+                <div class="feature-title" th:text="#{about.delivery.title}"></div>
+                <div class="feature-desc" th:text="#{about.delivery.desc}"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="feature-box h-100">
+                <i class="fas fa-star text-info feature-icon"></i>
+                <div class="feature-title" th:text="#{about.quality.title}"></div>
+                <div class="feature-desc" th:text="#{about.quality.desc}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

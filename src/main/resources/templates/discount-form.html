@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-css}"></head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container mt-5">
+
+    <h2 th:if="${discount.id == null}"
+        th:text="#{discount.add-title}"></h2>
+    <h2 th:if="${discount.id != null}"
+        th:text="#{discount.edit-title}"></h2>
+
+
+    <form method="POST"
+          th:action="@{/discount/add}"
+          th:if="${discount.id == null} and ${discount.door != null}"
+          th:object="${discount}">
+
+        <div class="alert alert-danger" th:if="${error}">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="doorName" th:text="#{discount.product-label}"></label>
+            <input class="form-control" readonly
+                   th:value="${discount.getDoor().getName()}" type="text">
+        </div>
+        <input th:field="*{door.id}" type="hidden"/>
+        <div class="form-group">
+            <label for="percentage" th:text="#{discount.percentage-label}"></label>
+            <input class="form-control" max="100" min="0"
+                   placeholder="%" required
+                   th:field="*{percentage}" type="number"/>
+        </div>
+
+        <div class="form-group">
+            <label for="validUntil" th:text="#{discount.date-label}"></label>
+            <input class="form-control" required
+                   th:field="*{date}" type="datetime-local">
+        </div>
+
+        <button class="btn btn-outline-dark" th:text="#{discount.create-button}" type="submit"></button>
+    </form>
+
+    <form method="POST"
+          th:action="@{/discount/edit(discountId=${discount.id})}"
+          th:if="${discount.id != null}"
+          th:object="${discount}">
+
+        <div class="alert alert-danger" th:if="${error}">
+            <p th:text="${error}"></p>
+        </div>
+        <input th:field="*{door.id}" type="hidden"/>
+
+        <div class="form-group">
+            <label for="doorName" th:text="#{discount.product-label}"></label>
+            <input class="form-control" id="doorName" readonly
+                   th:value="${discount.getDoor().getName()}" type="text">
+        </div>
+
+        <div class="form-group">
+            <label for="percentage" th:text="#{discount.percentage-label}"></label>
+            <input class="form-control" id="percentage" max="100" min="0"
+                   placeholder="%" required
+                   th:field="*{percentage}" type="number"/>
+        </div>
+
+        <div class="form-group">
+            <label for="validUntil" th:text="#{discount.date-label}"></label>
+            <input class="form-control" id="validUntil"
+                   required th:field="*{date}"
+                   type="datetime-local"/>
+        </div>
+
+        <button class="btn btn-outline-dark" th:text="#{discount.update-button}" type="submit"></button>
+    </form>
+
+    <div class="mt-3" th:if="${discount.id != null}">
+        <form method="post" th:action="@{'/discount/delete/' + ${discount.id}}">
+            <button class="btn btn-danger" th:text="#{discount.delete-button}" type="submit"></button>
+        </form>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

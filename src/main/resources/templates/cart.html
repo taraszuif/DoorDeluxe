@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container justify-content-center">
+    <div class="alert alert-danger" role="alert"
+         th:if="${noDoors != null and noDoors}"
+         th:text="#{cart.nodoors}"></div>
+    <h2 class="align-items-center d-flex justify-content-center" th:text="#{cart.title}"></h2>
+
+    <div class="row">
+        <div class="col col-sm-auto col-lg-3" style="width: 270px;" th:each="door : ${doors.keySet()}"
+             th:if="${!doors.isEmpty()}">
+            <div class="card text-center d-flex flex-column h-100">
+                <a class="fill-div text-decoration-none text-dark" th:href="@{'/door/about/' + ${door.getId()}}">
+                    <div style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <img alt="Door image"
+                             style="max-height: 100%; width: auto; object-fit: contain;"
+                             th:src="${door.getImageUrl()}">
+                    </div>
+                    <div class="card-body flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="card-title" th:text="${door.getName()}"></h4>
+                        <div th:if="${door.getDiscount() == null}">
+                            <p class="card-text h5 mb-2" th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center flex-column"
+                             th:if="${door.getDiscount() != null}">
+                            <p class="card-text mb-1">
+                                <span class="h5 text-danger font-weight-bold"
+                                      th:text="${door.getPriceWithDiscount()}  + ' ' + #{currency.uah}"></span>
+                            </p>
+                            <p class="card-text mb-2">
+                                <small class="text-muted">
+                                    <del th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></del>
+                                </small>
+                            </p>
+                            <span class="badge bg-success text-white"
+                                  th:text="#{label.discount} + ': ' + ${door.getDiscount().getIntPercentage()} + '%'"></span>
+                        </div>
+                        <p class="card-text" th:text="#{cart.count} + ' ' + ${doors.get(door)}"></p>
+                    </div>
+                </a>
+                <div class="card-footer bg-transparent border-top-0 justify-content-center">
+                    <a class="btn btn-sm btn-outline-danger btn-block"
+                       th:href="@{'/cart/remove/{id}'(id=${door.getId()})}"
+                       th:text="#{cart.remove}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 justify-content-center" th:if="${!doors.isEmpty()}">
+        <div class="col-md-auto mb-2">
+            <h4 th:text="#{cart.total} + ' ' + ${totalPrice} + 'грн'"></h4>
+        </div>
+    </div>
+
+    <div class="row justify-content-center gap-2" th:if="${!doors.isEmpty()}">
+        <div class="col-auto"
+             sec:authorize="hasRole('ROLE_DIRECTOR') or hasRole('ROLE_USER')or hasRole('ROLE_MANAGER')">
+            <a th:href="@{'/cart/checkout'}">
+                <button class="btn btn-success w-100 text-center px-4" th:text="#{cart.checkout}"
+                        type="button"></button>
+            </a>
+        </div>
+        <div class="col-auto" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">
+                <button class="btn btn-success w-100 text-center px-4" th:text="#{cart.login}" type="button"></button>
+            </a>
+        </div>
+        <div class="col-auto">
+            <a th:href="@{'/cart/clear'}">
+                <button class="btn btn-secondary w-100 text-center px-4" th:text="#{cart.clear}" type="button"></button>
+            </a>
+        </div>
+    </div>
+
+    <br>
+
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

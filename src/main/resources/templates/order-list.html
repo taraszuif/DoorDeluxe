@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}"></head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div sec:authorize="hasRole('ROLE_DIRECTOR')or hasRole('ROLE_MANAGER')">
+        <h2 class="my-4" th:text="#{order.all_orders}">Усі замовлення</h2>
+        <div th:insert="~{fragments/pagination}"></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{user.username}">Ім’я користувача</th>
+                <th th:text="#{order.sum}">Сума</th>
+                <th th:text="#{order.count}">Кількість дверей</th>
+                <th th:text="#{order.addtime}">Дата замовлення</th>
+                <th th:text="#{order.actions}">Дії</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${page}" th:if="${order.getUser() != null}">
+                <td th:text="${order.getUser().getUserName()}"></td>
+                <td th:text="${order.getTotalPrice().doubleValue()}"></td>
+                <td th:text="${order.getDoors().size()}"></td>
+                <td th:text="${order.getAddTime().format(formatter)}"></td>
+                <td>
+                    <form method="POST" th:action="@{'/order/status/' + ${order.getId()}}" th:object="${order}">
+                        <select class="form-select form-select-sm" name="status"
+                                onchange="this.form.submit()">
+                            <option th:each="status : ${T(me.zuif.doordeluxe.model.order.OrderStatus).values()}"
+                                    th:selected="${status.name()} == ${order.status.name()}"
+                                    th:text="${status.name()}"
+                                    th:value="${status.name()}">
+                            </option>
+                        </select>
+                    </form>
+                    <div class="mt-1">
+                        <form method="POST" style="display:inline;" th:action="@{'/order/delete/' + ${order.getId()}}">
+                            <button class="btn btn-danger btn-sm" type="submit">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                        <a class="btn btn-info btn-sm" th:href="@{'/order/about/' + ${order.getId()}}">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div sec:authorize="hasRole('ROLE_USER') and !hasRole('ROLE_DIRECTOR') and !hasRole('ROLE_MANAGER')">
+        <h2 class="my-4" th:text="#{order.your_orders}"></h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{order.sum}"></th>
+                <th th:text="#{order.count}"></th>
+                <th th:text="#{order.addtime}"></th>
+                <th th:text="#{order.actions}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${page}">
+                <td th:text="${order.getTotalPrice().doubleValue()}"></td>
+                <td th:text="${order.getDoors().size()}"></td>
+                <td th:text="${order.getAddTime().format(formatter)}"></td>
+                <td>
+                    <a class="btn btn-info btn-sm" th:href="@{'/order/about/' + ${order.getId()}}">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

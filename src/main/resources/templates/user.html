@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container text-center">
+    <h1 th:text="#{user.title}"></h1>
+    <div class="row justify-content-around">
+        <div class="col">
+            <div class="card text-center">
+
+                <div class="embed-responsive">
+                    <img alt="Card image cap" class="card-img-top embed-responsive-16by9"
+                         style="object-fit: cover"
+                         th:src="${user.getImageUrl()}">
+                </div>
+            </div>
+        </div>
+        <div class="col d-flex align-items-center justify-content-center">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"
+                    th:text="#{user.firstname} + ': ' + ${user.getFirstName()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.lastname} + ': ' + ${user.getLastName()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.email} + ': ' + ${user.getEmail()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.age} + ': ' + ${user.getAge()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.role} + ': ' + ${user.getRole().name()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.city} + ': ' + ${user.getCity()}"></li>
+                <li class="list-group-item"
+                    th:text="#{user.username}+ ': ' + ${user.getUserName()}"></li>
+            </ul>
+        </div>
+    </div>
+    <a class="btn btn-lg btn-outline-info btn-block d-flex align-items-center justify-content-center"
+       th:href="${'/user/edit/' + user.getId()}"
+       th:text="#{edit}"></a>
+</div>
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

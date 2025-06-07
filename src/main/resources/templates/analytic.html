@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4 text-center" th:text="#{analytics.title}"></h2>
+
+    <form class="row g-3 mb-4" id="analytics-form">
+        <div class="col-md-6">
+            <label class="form-label" for="start-date" th:text="#{analytics.startDate}"></label>
+            <input class="form-control" id="start-date" name="startDate" type="date">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="end-date" th:text="#{analytics.endDate}"></label>
+            <input class="form-control" id="end-date" name="endDate" type="date">
+        </div>
+    </form>
+
+    <div class="d-flex gap-3 mb-4">
+        <button class="btn btn-success w-100" disabled id="financial-btn"
+                onclick="showFinancialAnalytics()" th:text="#{analytics.financial}"></button>
+        <button class="btn btn-info w-100" disabled id="order-btn"
+                onclick="showOrderAnalytics()" th:text="#{analytics.orders}"></button>
+    </div>
+
+    <div id="analytics-result">
+        <p class="text-muted text-center" th:text="#{analytics.selectRange}"></p>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script>
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
+    const financialBtn = document.getElementById("financial-btn");
+    const orderBtn = document.getElementById("order-btn");
+
+    function checkDates() {
+        const start = startInput.value;
+        const end = endInput.value;
+
+        const enabled = start && end;
+        financialBtn.disabled = !enabled;
+        orderBtn.disabled = !enabled;
+    }
+
+    startInput.addEventListener("input", checkDates);
+    endInput.addEventListener("input", checkDates);
+
+    function showFinancialAnalytics() {
+        const start = document.getElementById("start-date").value;
+        const end = document.getElementById("end-date").value;
+
+        if (!start || !end) {
+            return;
+        }
+
+        fetch(`/analytics/financial?start=${start}&end=${end}`)
+            .then(res => res.text())
+            .then(html => {
+                const resultDiv = document.getElementById("analytics-result");
+                resultDiv.innerHTML = html;
+
+                const code = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+                eval(code);
+            })
+    }
+
+    function showOrderAnalytics() {
+        const start = document.getElementById("start-date").value;
+        const end = document.getElementById("end-date").value;
+
+        if (!start || !end) {
+            return;
+        }
+
+        fetch(`/analytics/orders?start=${start}&end=${end}`)
+            .then(res => res.text())
+            .then(html => {
+                const resultDiv = document.getElementById("analytics-result");
+                resultDiv.innerHTML = html;
+
+                const code = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+                eval(code);
+            })
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

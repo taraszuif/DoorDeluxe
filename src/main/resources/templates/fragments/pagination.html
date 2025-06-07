@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+<nav aria-label="Pagination" class="nav align-items-center d-flex justify-content-center"
+     th:with="urlBuilder=${T(me.zuif.doordeluxe.utils.ServletUriComponentsBuilderWrapper).fromCurrentRequest()}">
+    <ul class="pagination text-center font-weight-medium">
+        <li class="page-item" th:classappend="${page.number eq 0} ? 'disabled'">
+            <a aria-label="Previous"
+               class="page-link svg-icon"
+               rel="tooltip"
+               th:href="@{${urlBuilder.replaceQueryParam('page', page.number lt 2 ? 1 : page.number).toUriString()}}"
+               th:title="#{pagination.previous}">
+                <span aria-hidden="true" data-feather="chevrons-left" height="20" width="20">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${i eq page.number + 1} ? 'active'"
+            th:each="i : ${#numbers.sequence( page.number + 1, page.totalPages > 10 + page.number ? page.number + 10 : page.totalPages, 1)}">
+
+            <a class="page-link" rel="tooltip"
+               th:href="@{${urlBuilder.replaceQueryParam('page', i).toUriString()}}"
+               th:text="${i}"
+               th:title="#{pagination.page} + ' ' + i"></a>
+        </li>
+        <li class="page-item disabled" th:if="${page.number + 10 < page.totalPages}">
+            <a class="page-link svg-icon" href="#">
+                <span data-feather="more-horizontal" height="20" width="20"></span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${page.number + 1 eq page.totalPages} ? 'disabled'">
+            <a aria-label="Next" class="page-link svg-icon"
+               rel="tooltip"
+               th:href="@{${urlBuilder.replaceQueryParam('page',page.number + 2).toUriString()}}"
+               th:title="#{pagination.next}">
+                <span aria-hidden="true" data-feather="chevrons-right" height="20" width="20">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="btn-group"
+     th:with="urlBuilder1=${T(me.zuif.doordeluxe.utils.ServletUriComponentsBuilderWrapper).fromCurrentRequest()}">
+    <button aria-expanded="false" aria-haspopup="true" class="btn btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            id="pagination" th:text="#{pagination.perpage}" type="button">
+    </button>
+
+    <div aria-labelledby="pagination" class="dropdown-menu text-center">
+        <a class="dropdown-item"
+           th:href="@{${urlBuilder1.replaceQueryParam('size', 1).replaceQueryParam('page', '1').toUriString()}}">1</a>
+        <a class="dropdown-item"
+           th:href="@{${urlBuilder1.replaceQueryParam('size', 2).replaceQueryParam('page', '1').toUriString()}}">2</a>
+        <a class="dropdown-item"
+           th:href="@{${urlBuilder1.replaceQueryParam('size', 4).replaceQueryParam('page', '1').toUriString()}}">4</a>
+        <a class="dropdown-item"
+           th:href="@{${urlBuilder1.replaceQueryParam('size', 8).replaceQueryParam('page', '1').toUriString()}}">8</a>
+        <a class="dropdown-item"
+           th:href="@{${urlBuilder1.replaceQueryParam('size', 16).replaceQueryParam('page', '1').toUriString()}}">16</a>
+    </div>
+</div>
+
+</body>
+
+</html>

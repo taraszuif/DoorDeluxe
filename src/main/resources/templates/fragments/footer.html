@@ -1,0 +1,71 @@
+<!doctype HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+<div th:fragment="footer"
+     th:with="urlBuilder=${T(me.zuif.doordeluxe.utils.ServletUriComponentsBuilderWrapper).fromCurrentRequest()}">
+    >
+    <footer class="text-center text-lg-start text-white py-4" style="background-color: #2c3135;">
+        <div class="container">
+            <div class="row align-items-center justify-content-center g-5">
+                <div class="col-auto">
+                    <span class="me-1 small" th:text="#{footer.github}"></span>
+                    <a class="text-reset fs-6" href="" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+
+                <div class="col-auto">
+                    <a class="text-decoration-none text-white fw-semibold small" th:href="@{/about}"
+                       th:text="#{about.name}"></a>
+                </div>
+
+                <div class="col-auto">
+                    <div class="d-flex align-items-center">
+                        <label class="me-1 mb-0 fw-semibold small" for="select-lang">🌐</label>
+                        <select class="form-select form-select-sm bg-dark text-white border-light w-auto py-0 px-1"
+                                id="select-lang">
+                            <option th:selected="${#locale.language == 'en'}" th:text="#{footer.language.en}"
+                                    value="en">English
+                            </option>
+                            <option th:selected="${#locale.language == 'ua'}" th:text="#{footer.language.ua}"
+                                    value="ua">Українська
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-white" th:text="#{footer.copyright}"></div>
+        </div>
+
+        <script>
+            document.getElementById('select-lang').addEventListener('change', function () {
+                const lang = this.value;
+                fetch('/change', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({lang: lang})
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </footer>
+
+    <script th:src="@{webjars/jquery/3.3.1-1/jquery.min.js}" type="text/javascript"></script>
+    <script th:src="@{webjars/bootstrap/5.3.3/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/lang.js}" type="text/javascript"></script>
+</div>
+</body>
+
+</html>

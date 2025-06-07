@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<style>
+    body {
+        background: #f5f5f5;
+    }
+
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+    }
+
+    .login-card {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .login-card h1 {
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 600;
+        color: #333333;
+    }
+
+    .login-card .form-group {
+        margin-bottom: 20px;
+    }
+
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+        font-size: 16px;
+        padding: 12px 16px;
+        border: 1.5px solid #ccc;
+        border-radius: 6px;
+        background-color: #fafafa;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .login-card input[type="text"]:focus,
+    .login-card input[type="password"]:focus {
+        border-color: #999;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+        outline: none;
+    }
+
+    .login-card .btn {
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 6px;
+        background-color: #444;
+        border: none;
+        color: white;
+        transition: background-color 0.3s;
+    }
+
+    .login-card .btn:hover {
+        background-color: #222;
+    }
+
+    .login-card span,
+    .login-card a {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .alert {
+        font-size: 14px;
+    }
+
+</style>
+
+<div class="container centered-form">
+    <div class="row justify-content-center w-100">
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <div class="login-card">
+                <form autocomplete="off" class="form-centered form-signin mx-auto" method="POST"
+                      style="max-width: 400px;"
+                      th:action="@{/login}">
+                    <div th:if="${param.logout}">
+                        <div class="alert alert-info" th:text="#{login.alert.logged_out}"></div>
+                    </div>
+                    <fieldset>
+                        <h1 class="text-center mb-4" th:text="#{login.sign_in}"></h1>
+
+                        <label th:text="#{user.username}"></label>
+                        <div class="form-group">
+                            <input autofocus="true" class="form-control" name="username"
+                                   placeholder=""
+                                   required="required" type="text"/>
+                        </div>
+
+                        <label th:text="#{user.password}"></label>
+                        <div class="form-group">
+                            <input class="form-control" name="password" placeholder="" required="required"
+                                   type="password"/>
+                        </div>
+
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger" th:text="*{error}"></div>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <span th:text="#{login.no_account}"></span>
+                            <a th:href="@{/register}" th:text="#{register.button}"></a>
+                        </div>
+
+                        <div class="row no-gutters">
+                            <div class="col-4 pr-1">
+                                <input class="btn btn-primary btn-block h-100" id="login-submit" name="login-submit"
+                                       style="width: 100px" th:value="#{user.log_in}" type="submit"/>
+                            </div>
+
+                            <div class="col-8 pl-1">
+                                <a class="btn btn-danger btn-block d-flex align-items-center justify-content-center h-100"
+                                   href="/oauth2/authorization/google"
+                                   style="gap: 10px;">
+                                    <img alt="Google Logo"
+                                         src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                                         style="width: 20px; height: 20px;">
+                                    <span style="color: white;" th:text="#{login.google_sign_in}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

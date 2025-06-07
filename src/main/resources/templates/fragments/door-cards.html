@@ -1,0 +1,82 @@
+<div th:fragment="door-cards">
+    <div class="row" id="door-cards">
+        <div class="col col-sm-auto col-lg-3" style="width: 270px; height: 545px;"
+             th:each="door : ${page}" th:if="${!page.isEmpty()}">
+            <div class="card text-center h- d-flex flex-column">
+
+                <div class="admin d-flex justify-content-center gap-2"
+                     sec:authorize="hasRole('ROLE_DIRECTOR')or hasRole('ROLE_MANAGER')">
+                    <form method="POST" style="display:inline;" th:action="@{'/door/delete/' + ${door.getId()}}">
+                        <button class="btn btn-sm btn-danger mr-1" th:title="#{button.delete}" type="submit">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+
+                    <a class="btn btn-sm btn-warning" th:href="@{'/door/edit/' + ${door.getId()}}"
+                       th:title="#{button.edit}">
+                        <i class="fas fa-wrench"></i>
+                    </a>
+
+                    <a class="btn btn-sm btn-success"
+                       th:href="@{'/discount/add?doorId=' + ${door.getId()}}"
+                       th:if="${door.getDiscount() == null}"
+                       th:title="#{button.addDiscount}">
+                        <i class="fas fa-percent"></i>
+                    </a>
+
+                    <a class="btn btn-sm btn-primary"
+                       th:href="@{'/discount/edit?discountId=' + ${door.getDiscount().getId()}}"
+                       th:if="${door.getDiscount() != null}"
+                       th:title="#{button.editDiscount}">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <form method="post" style="display:inline;" th:action="@{/discount/delete}"
+                          th:if="${door.getDiscount() != null}">
+                        <input name="discountId" th:value="${door.getDiscount().getId()}" type="hidden"/>
+                        <button class="btn btn-sm btn-danger" th:title="#{button.deleteDiscount}" type="submit">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <a class="fill-div" th:href="@{'/door/about/' + ${door.getId()}}">
+                    <div style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <img alt="Card image cap"
+                             style="max-height: 100%; width: auto; object-fit: contain;"
+                             th:src="${door.getImageUrl()}">
+                    </div>
+
+                    <div class="card-body d-flex flex-column justify-content-between" style="min-height: 180px;">
+                        <h4 class="card-title" th:text="${door.getShortName()}"></h4>
+
+                        <div th:if="${door.getDiscount() == null}">
+                            <p class="card-text h5 mb-2" th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center flex-column"
+                             th:if="${door.getDiscount() != null}">
+                            <p class="card-text mb-1">
+                                <span class="h5 text-danger font-weight-bold"
+                                      th:text="${door.getPriceWithDiscount()}  + ' ' + #{currency.uah}"></span>
+                            </p>
+                            <p class="card-text mb-2">
+                                <small class="text-muted">
+                                    <del th:text="${door.getPrice()}  + ' ' + #{currency.uah}"></del>
+                                </small>
+                            </p>
+                            <span class="badge bg-success text-white"
+                                  th:text="#{label.discount} + ': ' + ${door.getDiscount().getIntPercentage()} + '%'"></span>
+                        </div>
+                    </div>
+                </a>
+                <button class="btn btn-lg btn-outline-info btn-block add-to-cart-btn"
+                        th:data-door-id="${door.getId()}"
+                        th:title="#{door.add}">
+                    <i class="fas fa-cart-plus"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

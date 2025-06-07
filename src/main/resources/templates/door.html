@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: header-css}">
+</head>
+
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="row" style="margin-top:25px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form autocomplete="off" class="form" method="POST" th:object="${doorForm}">
+                <fieldset>
+
+                    <h1 th:if="${method} == 'new'" th:text="#{create}"></h1>
+                    <h1 th:if="${method} == 'edit'" th:text="#{edit}"></h1>
+                    <div class="form-group">
+                        <label th:text="#{door.name}"></label>
+                        <input autofocus="true" class="form-control input-lg" required th:field="*{name}" title="name"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{name}"
+                             th:if="${#fields.hasErrors('name')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.type}"></label>
+                        <select autofocus="true" class="form-control input-lg" name="type.name"
+                                required th:field="*{doorType}">
+                            <option value="0">select</option>
+                            <option th:each="type : ${types}" th:text="${type.name}"
+                                    th:value="${type}"></option>
+                        </select>
+                        <div class="alert alert-danger error-alert" th:errors="*{doorType}"
+                             th:if="${#fields.hasErrors('doorType')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.manufacturer}"></label>
+                        <input autofocus="false" class="form-control input-lg" required th:field="*{manufacturer}"
+                               title="manufacturer"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{manufacturer}"
+                             th:if="${#fields.hasErrors('manufacturer')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.desc}"></label>
+                        <input autofocus="false" class="form-control input-lg" required th:field="*{description}"
+                               title="description"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{description}"
+                             th:if="${#fields.hasErrors('description')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.image_url}"></label>
+                        <input autofocus="false" class="form-control input-lg" required th:field="*{imageUrl}"
+                               title="imageUrl"
+                               type="text"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{imageUrl}"
+                             th:if="${#fields.hasErrors('imageUrl')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.price}"></label>
+                        <input autofocus="false" class="form-control input-lg" required th:field="*{price}"
+                               title="price"
+                               type="number"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{price}"
+                             th:if="${#fields.hasErrors('price')}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{door.count}"></label>
+                        <input autofocus="false" class="form-control input-lg" required th:field="*{count}"
+                               title="count"
+                               type="number"/>
+                        <div class="alert alert-danger error-alert" th:errors="*{count}"
+                             th:if="${#fields.hasErrors('count')}"></div>
+                    </div>
+                    <input class="btn btn-outline-dark" th:action="@{/door/new}" th:if="${method} == 'new'"
+                           th:value="#{confirm}" type="submit"/>
+                    <input class="btn btn-outline-dark" th:action="@{/home}"
+                           th:value="#{door.cancel}" type="submit"/>
+                    <input class="btn btn-outline-dark" th:action="@{/door/edit/{doorId}}" th:if="${method} == 'edit'"
+                           th:value="#{confirm}" type="submit"/>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>
